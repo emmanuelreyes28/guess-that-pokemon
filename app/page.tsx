@@ -4,9 +4,15 @@ import PlayerForm from "./PlayerForm";
 
 export default function Home() {
   return (
-    <div>
-      <h1 className={styles.title}>Guess that Pok&eacute;mon!</h1>
-      <PlayerForm />
+    <div className={styles.container}>
+      <div className={styles.formBackground}>
+        <div className={styles.title}>
+          <h1>Guess that Pok&eacute;mon!</h1>
+        </div>
+        <div className="playerInput">
+          <PlayerForm />
+        </div>
+      </div>
     </div>
   );
 }

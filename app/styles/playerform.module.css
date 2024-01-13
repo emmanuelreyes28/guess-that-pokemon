@@ -5,9 +5,6 @@
     width: 30em;
     height: 10em;
     align-items: center;
-    border-radius: 10px;
-    border-color: red;
-    border-style: dashed;
 }
 
 .button {
@@ -15,8 +12,18 @@
     height: 30px;
     width: 10rem;
     border-radius: 10px;
-    background-color: #3E68AF;
+    background-color: var(--secondary-color);
     border-style: none;
+}
+
+.button:hover{
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.message{
+    color: var(--text-color);
+    font-weight: bold;
 }
 
 .playerNameContainer,
@@ -30,6 +37,15 @@
     width: 100%;
     height: 100%;
     font-size: 15px;
+    border-style: solid;
     border-radius: 10px;
+    border-width: 2px;
+    border-color: var(--text-color);
     padding: 5px 0 5px 5px;
+    background: none;
+    color: var(--text-color);
+}
+
+.playerNameInput::placeholder{
+    /* color:white; */
 }
