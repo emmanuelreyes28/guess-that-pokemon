@@ -17,8 +17,9 @@
 }
 
 .button:hover{
-    background-color: var(--accent-color);
-    color: var(--text-color);
+    scale: 1.10;
+    /* background-color: var(--accent-color);
+    color: var(--text-color); */
 }
 
 .message{
@@ -37,12 +38,13 @@
     width: 100%;
     height: 100%;
     font-size: 15px;
-    border-style: solid;
+    border-style: none;
     border-radius: 10px;
     border-width: 2px;
-    border-color: var(--text-color);
+    /* border-color: var(--text-color); */
     padding: 5px 0 5px 5px;
-    background: none;
+    /* background: none; */
+    background-color: white;
     color: var(--text-color);
 }
 
