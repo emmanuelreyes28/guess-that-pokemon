@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Pokemon from "../PokemonImage";
+import { useSearchParams } from "next/navigation";
 
 async function getPokemon() {
   const response = await fetch(
@@ -45,11 +46,17 @@ export default function GamePage() {
 
   const [pokemonChosen, setPokemonChosen] = useState<PokemonChosen>();
   const [pokemonOptions, setPokemonOptions] = useState<PokemonOptions>();
+  const searchParams = useSearchParams();
+  const playerName = searchParams.get("name");
+  const numOfrounds = searchParams.get("rounds");
 
   return (
     <div>
       <p>Game Page</p>
       <h1>Where is my text</h1>
+      <p>
+        {playerName} {numOfrounds}
+      </p>
     </div>
   );
 }

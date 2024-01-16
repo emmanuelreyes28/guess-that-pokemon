@@ -1,18 +1,22 @@
 "use client";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import styles from "./styles/playerform.module.css";
-import { useRouter } from "next/navigation";
+
+export interface PlayerInfo {
+  name: string;
+  rounds: string;
+}
 
 function PlayerForm() {
   const router = useRouter();
-  interface PlayerInfo {
-    name: string;
-    rounds: number;
-  }
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
 
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
     name: "",
-    rounds: 5,
+    rounds: "5",
   });
 
   const [message, setMessage] = useState("");
@@ -22,8 +26,10 @@ function PlayerForm() {
       onSubmit={(event) => {
         event.preventDefault();
         if (playerInfo.name.length > 0) {
-          console.log(playerInfo);
-          router.push("/game");
+          //set params to use in game page
+          params.set("name", playerInfo.name);
+          params.set("rounds", playerInfo.rounds);
+          router.push(`/game?${params.toString()}`);
         } else {
           setMessage("Please enter player name");
         }
@@ -52,7 +58,7 @@ function PlayerForm() {
               const { value } = event.target;
               setPlayerInfo((prevPlayerInfo) => ({
                 ...prevPlayerInfo,
-                rounds: parseInt(value, 10),
+                rounds: value,
               }));
             }}
           >
