@@ -5,8 +5,12 @@ import PokemonDetails from "../PokemonDetails";
 
 //create types for states
 export type TargetPokemon = {
-  name: string;
+  // name: string;
   sprite: string;
+};
+
+export type PokemonOptions = {
+  names: Array<string>;
 };
 
 const randomId = (): number => {
@@ -18,6 +22,9 @@ export default function Test() {
   const [targetPokemon, setTargetPokemon] = useState<TargetPokemon | null>(
     null
   );
+  const [pokemonOptions, setPokemonOptions] = useState<PokemonOptions>({
+    names: [],
+  });
 
   useEffect(() => {
     async function fetchPokemonTarget() {
@@ -27,7 +34,12 @@ export default function Test() {
         const data = await response.json();
         const sprite = data.sprites.front_default;
         const pokemonName = data.name;
-        setTargetPokemon({ name: pokemonName, sprite: sprite });
+        setTargetPokemon({ sprite: sprite });
+        setPokemonOptions((prevOptions) => ({
+          names: [...prevOptions.names, pokemonName],
+        }));
+        // pokemonOptions?.names.push(pokemonName);
+        // setTargetPokemon({ name: pokemonName, sprite: sprite });
       } catch (error) {
         console.log(error);
       }
@@ -39,16 +51,32 @@ export default function Test() {
     async function fetchPokemonOptions() {
       try {
         const pokemonNames: string[] = [];
-        for (let i = 0; i < 3; i++) {
+        // track ids visited so we do not run into duplicates
+        const idsVisited: number[] = [];
+
+        // for (let i = 0; pokemonNames.length !== 3; i++) {
+        for (let i = 0; pokemonOptions?.names.length != 4; i++) {
+          console.log(pokemonOptions.names.length);
           const id = randomId();
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${id}`
-          );
-          const data = await response.json();
-          const pokemonName = data.name;
-          pokemonNames.push(pokemonName);
+          // if id is not in idsVisited
+          if (!(id in idsVisited)) {
+            // add id to idsVisited
+            idsVisited.push(id);
+            // fetch pokemon name for given id
+            const response = await fetch(
+              `https://pokeapi.co/api/v2/pokemon/${id}`
+            );
+            const data = await response.json();
+            const pokemonName = data.name;
+            // store pokemon name to pokemonName array
+            // pokemonNames.push(pokemonName);
+            // pokemonOptions?.names.push(pokemonName);
+            setPokemonOptions((prevOptions) => ({
+              names: [...prevOptions.names, pokemonName],
+            }));
+          }
         }
-        console.log(pokemonNames);
+        // console.log(pokemonOptions);
       } catch (error) {
         console.log(error);
       }
@@ -56,6 +84,8 @@ export default function Test() {
 
     fetchPokemonOptions();
   }, []);
+
+  console.log(pokemonOptions);
 
   //pass in state values into to pokemonDetails as props
   return <PokemonDetails />;
