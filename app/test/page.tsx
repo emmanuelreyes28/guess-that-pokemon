@@ -3,89 +3,57 @@
 import { useEffect, useState } from "react";
 import PokemonDetails from "../PokemonDetails";
 
-//create types for states
-export type TargetPokemon = {
-  // name: string;
+/*
+use one aync function to get all pokemon details that will be used for the game page
+first get four random ids and store them in array - can have randomIds function loop through 4 iteration and populate idsArray
+second map over array to fetch api for given id - this will be done in the async function
+*/
+
+export type PokemonDetails = {
+  name: string;
   sprite: string;
 };
 
-export type PokemonOptions = {
-  names: Array<string>;
-};
-
-const randomId = (): number => {
-  return Math.floor(Math.random() * 151) + 1;
+const randomIds = (): number[] => {
+  const ids: number[] = [];
+  for (let i = 0; i < 4; i++) {
+    let randomNum = Math.floor(Math.random() * 151) + 1;
+    ids.push(randomNum);
+  }
+  return ids;
 };
 
 export default function Test() {
   //create states for target pokemon and pokemon names
-  const [targetPokemon, setTargetPokemon] = useState<TargetPokemon | null>(
-    null
-  );
-  const [pokemonOptions, setPokemonOptions] = useState<PokemonOptions>({
-    names: [],
-  });
+  const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
+
+  const fetchPokemonDetails = async () => {
+    const idArray = randomIds();
+    try {
+      const result = await Promise.all(
+        idArray.map(async (id) => {
+          const response = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${id}`
+          );
+          const data = await response.json();
+          return data;
+        })
+      );
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    async function fetchPokemonTarget() {
-      try {
-        const id = randomId();
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-        const data = await response.json();
-        const sprite = data.sprites.front_default;
-        const pokemonName = data.name;
-        setTargetPokemon({ sprite: sprite });
-        setPokemonOptions((prevOptions) => ({
-          names: [...prevOptions.names, pokemonName],
-        }));
-        // pokemonOptions?.names.push(pokemonName);
-        // setTargetPokemon({ name: pokemonName, sprite: sprite });
-      } catch (error) {
-        console.log(error);
-      }
+    async function startFetching() {
+      const result = await fetchPokemonDetails();
+      console.log(result);
+      // grab sprite and name from here and set it to its respective state
+      // think about how you want to run both fetchPokemonTarget and fetchPokemonOptions concurrently
     }
-
-    //create fetchPokemonNames async functions
-    fetchPokemonTarget();
-
-    async function fetchPokemonOptions() {
-      try {
-        const pokemonNames: string[] = [];
-        // track ids visited so we do not run into duplicates
-        const idsVisited: number[] = [];
-
-        // for (let i = 0; pokemonNames.length !== 3; i++) {
-        for (let i = 0; pokemonOptions?.names.length != 4; i++) {
-          console.log(pokemonOptions.names.length);
-          const id = randomId();
-          // if id is not in idsVisited
-          if (!(id in idsVisited)) {
-            // add id to idsVisited
-            idsVisited.push(id);
-            // fetch pokemon name for given id
-            const response = await fetch(
-              `https://pokeapi.co/api/v2/pokemon/${id}`
-            );
-            const data = await response.json();
-            const pokemonName = data.name;
-            // store pokemon name to pokemonName array
-            // pokemonNames.push(pokemonName);
-            // pokemonOptions?.names.push(pokemonName);
-            setPokemonOptions((prevOptions) => ({
-              names: [...prevOptions.names, pokemonName],
-            }));
-          }
-        }
-        // console.log(pokemonOptions);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    fetchPokemonOptions();
+    startFetching();
   }, []);
-
-  console.log(pokemonOptions);
 
   //pass in state values into to pokemonDetails as props
   return <PokemonDetails />;
