@@ -16,9 +16,12 @@ export type PokemonDetails = {
 
 const randomIds = (): number[] => {
   const ids: number[] = [];
-  for (let i = 0; i < 4; i++) {
+  while (ids.length < 4) {
     let randomNum = Math.floor(Math.random() * 151) + 1;
-    ids.push(randomNum);
+    // avoid duplicates
+    if (!ids.includes(randomNum)) {
+      ids.push(randomNum);
+    }
   }
   return ids;
 };
@@ -36,6 +39,7 @@ export default function Test() {
             `https://pokeapi.co/api/v2/pokemon/${id}`
           );
           const data = await response.json();
+          console.log(data.name);
           return data;
         })
       );
@@ -48,13 +52,32 @@ export default function Test() {
   useEffect(() => {
     async function startFetching() {
       const result = await fetchPokemonDetails();
-      console.log(result);
-      // grab sprite and name from here and set it to its respective state
-      // think about how you want to run both fetchPokemonTarget and fetchPokemonOptions concurrently
+      // console.log(result);
+
+      result?.forEach((item) => {
+        setPokemonDetails((prevPokemonDetails) => {
+          return [
+            ...prevPokemonDetails,
+            { name: item.name, sprite: item.sprites.front_default },
+          ];
+        });
+      });
     }
     startFetching();
   }, []);
 
   //pass in state values into to pokemonDetails as props
-  return <PokemonDetails />;
+  return (
+    <>
+      <PokemonDetails />
+      <div>
+        {pokemonDetails.map((pokemon) => (
+          <div key={pokemon.name}>
+            <p>{pokemon.name}</p>
+            <p>{pokemon.sprite}</p>
+          </div>
+        ))}
+      </div>
+    </>
+  );
 }
