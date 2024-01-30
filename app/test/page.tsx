@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PokemonDetails from "../PokemonDetails";
+import PokemonCard from "../PokemonCard";
+import PokemonChoice from "../PokemonChoice";
 
-/*
-use one aync function to get all pokemon details that will be used for the game page
-first get four random ids and store them in array - can have randomIds function loop through 4 iteration and populate idsArray
-second map over array to fetch api for given id - this will be done in the async function
-*/
+//TO-DO: START ON LOGIC OF CORRECT POKEMON CHOICE BEING SELECTED
+// KEEP TRACK OF SCORE
+// CHANGE USE EFFECT DEPENDENCY ON BUTTON CLICKED POSSIBLY
 
 export type PokemonDetails = {
   name: string;
@@ -26,9 +25,18 @@ const randomIds = (): number[] => {
   return ids;
 };
 
+const shuffle = (array: PokemonDetails[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 export default function Test() {
   //create states for target pokemon and pokemon names
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
+  const [answer, setAnswer] = useState<PokemonDetails>();
 
   const fetchPokemonDetails = async () => {
     const idArray = randomIds();
@@ -52,7 +60,6 @@ export default function Test() {
   useEffect(() => {
     async function startFetching() {
       const result = await fetchPokemonDetails();
-      // console.log(result);
 
       result?.forEach((item) => {
         setPokemonDetails((prevPokemonDetails) => {
@@ -66,18 +73,21 @@ export default function Test() {
     startFetching();
   }, []);
 
-  //pass in state values into to pokemonDetails as props
+  useEffect(() => {
+    // shuffle pokemon array so the answer is not always the same button
+    const shuffledPokemon = shuffle(pokemonDetails);
+    setPokemonDetails(shuffledPokemon);
+    const indexAnswer = Math.floor(Math.random() * 4);
+    setAnswer(pokemonDetails.at(indexAnswer));
+  }, [pokemonDetails]);
+
   return (
-    <>
-      <PokemonDetails />
-      <div>
-        {pokemonDetails.map((pokemon) => (
-          <div key={pokemon.name}>
-            <p>{pokemon.name}</p>
-            <p>{pokemon.sprite}</p>
-          </div>
-        ))}
-      </div>
-    </>
+    <div>
+      {answer && <PokemonCard name={answer.name} sprite={answer.sprite} />}
+
+      {pokemonDetails.map((pokemon) => (
+        <PokemonChoice key={pokemon.name} name={pokemon.name} />
+      ))}
+    </div>
   );
 }
