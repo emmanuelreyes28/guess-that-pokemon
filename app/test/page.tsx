@@ -37,6 +37,7 @@ export default function Test() {
   //create states for target pokemon and pokemon names
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [answer, setAnswer] = useState<PokemonDetails>();
+  const [fetchTriggered, setFetchTriggered] = useState<boolean>(true);
 
   const fetchPokemonDetails = async () => {
     const idArray = randomIds();
@@ -69,9 +70,13 @@ export default function Test() {
           ];
         });
       });
+      setFetchTriggered(false); // reset fetch trigger
     }
-    startFetching();
-  }, []);
+
+    if (fetchTriggered) {
+      startFetching();
+    }
+  }, [fetchTriggered]);
 
   useEffect(() => {
     // shuffle pokemon array so the answer is not always the same button
@@ -81,12 +86,26 @@ export default function Test() {
     setAnswer(pokemonDetails.at(indexAnswer));
   }, [pokemonDetails]);
 
+  function handleClick(pokemon: { name: string }) {
+    if (pokemon.name === answer?.name) {
+      console.log("correct!");
+    } else {
+      console.log("wrong!");
+    }
+    setPokemonDetails([]); // reset array of pokemonDetails to avoid from growing on every render
+    setFetchTriggered(true); // trigger fetch function when player makes selections
+  }
+
   return (
     <div>
       {answer && <PokemonCard name={answer.name} sprite={answer.sprite} />}
 
       {pokemonDetails.map((pokemon) => (
-        <PokemonChoice key={pokemon.name} name={pokemon.name} />
+        <PokemonChoice
+          key={pokemon.name}
+          name={pokemon.name}
+          onClick={() => handleClick(pokemon)}
+        />
       ))}
     </div>
   );
