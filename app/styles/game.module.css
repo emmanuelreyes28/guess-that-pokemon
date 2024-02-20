@@ -1,0 +1,19 @@
+.pokemonCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    
+}
+
+.hidePokemon{
+    filter: invert(50%);
+}
+
+.showPokemon{
+    filter: invert(0);
+}
+
+/* .pokemonImage{
+    max-width: 100%;
+} */

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PokemonCard from "../PokemonCard";
 import PokemonChoice from "../PokemonChoice";
+import styles from "../styles/game.module.css";
 
 //TO-DO: create modal for end of game showing player final score and play again button
 // style game page and modal
@@ -39,6 +40,7 @@ export default function Game() {
   const [answer, setAnswer] = useState<PokemonDetails>();
   const [fetchTriggered, setFetchTriggered] = useState<boolean>(true);
   const [score, setScore] = useState<number>(0);
+  const [isPokemonChosen, setIsPokemonChosen] = useState<boolean>(false);
   const [roundsPlayed, setRoundsPlayed] = useState<number>(0);
   const searchParams = useSearchParams();
   const playerName = searchParams.get("name");
@@ -93,6 +95,7 @@ export default function Game() {
   }, [pokemonDetails]);
 
   function handleClick(pokemon: { name: string }) {
+    setIsPokemonChosen(true); // reveal pokemon once player has made a choice
     if (pokemon.name === answer?.name) {
       setScore(score + 1);
       console.log("correct!");
@@ -107,8 +110,11 @@ export default function Game() {
     if (roundsPlayed >= rounds) {
       console.log("End of game!");
     } else {
-      setPokemonDetails([]); // reset array of pokemonDetails to avoid from growing on every render
-      setFetchTriggered(true); // trigger fetch function when player makes selections
+      setTimeout(() => {
+        setPokemonDetails([]); // reset array of pokemonDetails to avoid from growing on every render
+        setFetchTriggered(true); // trigger fetch function when player makes selections
+        setIsPokemonChosen(false);
+      }, 1200);
     }
   }
 
@@ -118,7 +124,15 @@ export default function Game() {
         {playerName} {score}/{rounds}
       </p>
       <p>Round: {roundsPlayed}</p>
-      {answer && <PokemonCard name={answer.name} sprite={answer.sprite} />}
+      <div
+        className={`${styles.pokemonCard} ${
+          isPokemonChosen ? styles.showPokemon : styles.hidePokemon
+        }`}
+      >
+        <div>
+          {answer && <PokemonCard name={answer.name} sprite={answer.sprite} />}
+        </div>
+      </div>
 
       {pokemonDetails.map((pokemon) => (
         <PokemonChoice
