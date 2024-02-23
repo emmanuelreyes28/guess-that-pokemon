@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import PokemonCard from "../PokemonCard";
 import PokemonChoice from "../PokemonChoice";
 import styles from "../styles/game.module.css";
+import { FaGithub } from "react-icons/fa";
 
 //TO-DO: create modal for end of game showing player final score and play again button
 // style game page and modal
@@ -98,9 +99,9 @@ export default function Game() {
     setIsPokemonChosen(true); // reveal pokemon once player has made a choice
     if (pokemon.name === answer?.name) {
       setScore(score + 1);
-      console.log("correct!");
+      // console.log("correct!");
     } else {
-      console.log("wrong!");
+      // console.log("wrong!");
     }
 
     isGameOver();
@@ -119,11 +120,17 @@ export default function Game() {
   }
 
   return (
-    <div>
-      <p>
-        {playerName} {score}/{rounds}
-      </p>
-      <p>Round: {roundsPlayed}</p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Guess that Pok&eacute;mon!</h1>
+        <div className={styles.stats}>
+          <p>
+            {playerName}&apos;s score: {score}
+          </p>
+          <p className={styles.rounds}>round: {roundsPlayed}</p>
+        </div>
+      </div>
+
       <div
         className={`${styles.pokemonCard} ${
           isPokemonChosen ? styles.showPokemon : styles.hidePokemon
@@ -135,12 +142,20 @@ export default function Game() {
       </div>
 
       {pokemonDetails.map((pokemon) => (
-        <PokemonChoice
-          key={pokemon.name}
-          name={pokemon.name}
-          onClick={() => handleClick(pokemon)}
-        />
+        <div key={pokemon.name} className={styles.pokemonOption}>
+          <PokemonChoice
+            name={pokemon.name}
+            onClick={() => handleClick(pokemon)}
+          />
+        </div>
       ))}
+
+      <div className={styles.footer}>
+        <p>Emmanuel Reyes &copy;</p>
+        <div className={styles.github}>
+          <FaGithub />
+        </div>
+      </div>
     </div>
   );
 }
