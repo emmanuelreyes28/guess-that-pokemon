@@ -39,10 +39,12 @@ export default function Game() {
   //create states for target pokemon and pokemon names
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [answer, setAnswer] = useState<PokemonDetails>();
+  const [response, setResponse] = useState<string>("");
   const [fetchTriggered, setFetchTriggered] = useState<boolean>(true);
   const [score, setScore] = useState<number>(0);
   const [isPokemonChosen, setIsPokemonChosen] = useState<boolean>(false);
   const [roundsPlayed, setRoundsPlayed] = useState<number>(0);
+  const [gameInProgress, setGameInProgress] = useState<boolean>(true);
   const searchParams = useSearchParams();
   const playerName = searchParams.get("name");
   const rounds = Number(searchParams.get("rounds"));
@@ -67,25 +69,31 @@ export default function Game() {
   };
 
   useEffect(() => {
+    let ignore = false;
     async function startFetching() {
       const result = await fetchPokemonDetails();
-
-      result?.forEach((item) => {
-        setPokemonDetails((prevPokemonDetails) => {
-          return [
-            ...prevPokemonDetails,
-            { name: item.name, sprite: item.sprites.front_default },
-          ];
+      if (!ignore) {
+        result?.forEach((item) => {
+          setPokemonDetails((prevPokemonDetails) => {
+            return [
+              ...prevPokemonDetails,
+              { name: item.name, sprite: item.sprites.front_default },
+            ];
+          });
         });
-      });
-      setFetchTriggered(false); // reset fetch trigger
-      setRoundsPlayed(roundsPlayed + 1);
+        setFetchTriggered(false); // reset fetch trigger
+        setRoundsPlayed(roundsPlayed + 1);
+      }
     }
 
     if (fetchTriggered) {
       startFetching();
     }
-  }, [fetchTriggered]);
+
+    return () => {
+      ignore = true;
+    };
+  }, [fetchTriggered, roundsPlayed]);
 
   useEffect(() => {
     // shuffle pokemon array so the answer is not always the same button
@@ -97,13 +105,15 @@ export default function Game() {
 
   function handleClick(pokemon: { name: string }) {
     setIsPokemonChosen(true); // reveal pokemon once player has made a choice
+    setGameInProgress(false); // disable pokemon options from being clickable
+
     if (pokemon.name === answer?.name) {
       setScore(score + 1);
-      // console.log("correct!");
+      setResponse("Correct!");
     } else {
-      // console.log("wrong!");
+      setResponse(`Incorrect! It's ${answer?.name}!`);
     }
-
+    // check if game is over
     isGameOver();
   }
 
@@ -115,6 +125,7 @@ export default function Game() {
         setPokemonDetails([]); // reset array of pokemonDetails to avoid from growing on every render
         setFetchTriggered(true); // trigger fetch function when player makes selections
         setIsPokemonChosen(false);
+        setGameInProgress(true);
       }, 1200);
     }
   }
@@ -140,12 +151,13 @@ export default function Game() {
           {answer && <PokemonCard name={answer.name} sprite={answer.sprite} />}
         </div>
       </div>
+      <div className={styles.response}>{isPokemonChosen && response}</div>
 
       {pokemonDetails.map((pokemon) => (
         <div key={pokemon.name} className={styles.pokemonOption}>
           <PokemonChoice
             name={pokemon.name}
-            onClick={() => handleClick(pokemon)}
+            onClick={() => gameInProgress && handleClick(pokemon)}
           />
         </div>
       ))}
