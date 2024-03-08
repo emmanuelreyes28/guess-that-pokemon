@@ -6,9 +6,13 @@ import PokemonCard from "../PokemonCard";
 import PokemonChoice from "../PokemonChoice";
 import styles from "../styles/game.module.css";
 import { FaGithub } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 //TO-DO: create modal for end of game showing player final score and play again button
 // style game page and modal
+// add fade in transition for pokemon options when they mount
+// add styling to response text
+// add height to pokemonOptions to avoid footer from moving up and down on re-render
 
 export type PokemonDetails = {
   name: string;
@@ -130,6 +134,11 @@ export default function Game() {
     }
   }
 
+  const optionContainer = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 1 } },
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -141,7 +150,6 @@ export default function Game() {
           <p className={styles.rounds}>round: {roundsPlayed}</p>
         </div>
       </div>
-
       <div
         className={`${styles.pokemonCard} ${
           isPokemonChosen ? styles.showPokemon : styles.hidePokemon
@@ -153,15 +161,20 @@ export default function Game() {
       </div>
       <div className={styles.response}>{isPokemonChosen && response}</div>
 
-      {pokemonDetails.map((pokemon) => (
-        <div key={pokemon.name} className={styles.pokemonOption}>
+      {pokemonDetails.map((pokemon, index) => (
+        <motion.div
+          key={pokemon.name}
+          className={styles.pokemonOption}
+          variants={optionContainer}
+          initial="hidden"
+          animate={"show"}
+        >
           <PokemonChoice
             name={pokemon.name}
             onClick={() => gameInProgress && handleClick(pokemon)}
           />
-        </div>
+        </motion.div>
       ))}
-
       <div className={styles.footer}>
         <p>Emmanuel Reyes &copy;</p>
         <div className={styles.github}>
