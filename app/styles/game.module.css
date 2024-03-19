@@ -70,14 +70,14 @@
 .pokemonOption {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
     width: 100%;
     padding: 1em 0;
-    /* transition: opacity 2s ease-in-out; */
+    height: 4.5em;
 }
 
 .pokemonOption button {
-    width: 75%;
+    width: 100%;
     height: 100%;
     font-size: 1.25rem;
     background-color: var(--primary-color);

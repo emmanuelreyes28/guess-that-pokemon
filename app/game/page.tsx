@@ -140,47 +140,51 @@ export default function Game() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Guess that Pok&eacute;mon!</h1>
-        <div className={styles.stats}>
-          <p>
-            {playerName}&apos;s score: {score}
-          </p>
-          <p className={styles.rounds}>round: {roundsPlayed}</p>
+    <>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Guess that Pok&eacute;mon!</h1>
+          <div className={styles.stats}>
+            <p>
+              {playerName}&apos;s score: {score}
+            </p>
+            <p className={styles.rounds}>round: {roundsPlayed}</p>
+          </div>
         </div>
-      </div>
-      <div
-        className={`${styles.pokemonCard} ${
-          isPokemonChosen ? styles.showPokemon : styles.hidePokemon
-        }`}
-      >
-        <div>
-          {answer && <PokemonCard name={answer.name} sprite={answer.sprite} />}
-        </div>
-      </div>
-      <div className={styles.response}>{isPokemonChosen && response}</div>
-
-      {pokemonDetails.map((pokemon, index) => (
-        <motion.div
-          key={pokemon.name}
-          className={styles.pokemonOption}
-          variants={optionContainer}
-          initial="hidden"
-          animate={"show"}
+        <div
+          className={`${styles.pokemonCard} ${
+            isPokemonChosen ? styles.showPokemon : styles.hidePokemon
+          }`}
         >
-          <PokemonChoice
-            name={pokemon.name}
-            onClick={() => gameInProgress && handleClick(pokemon)}
-          />
-        </motion.div>
-      ))}
+          <div>
+            {answer && (
+              <PokemonCard name={answer.name} sprite={answer.sprite} />
+            )}
+          </div>
+        </div>
+        <div className={styles.response}>{isPokemonChosen && response}</div>
+
+        {pokemonDetails.map((pokemon, index) => (
+          <motion.div
+            key={pokemon.name}
+            className={styles.pokemonOption}
+            variants={optionContainer}
+            initial="hidden"
+            animate={"show"}
+          >
+            <PokemonChoice
+              name={pokemon.name}
+              onClick={() => gameInProgress && handleClick(pokemon)}
+            />
+          </motion.div>
+        ))}
+      </div>
       <div className={styles.footer}>
         <p>Emmanuel Reyes &copy;</p>
         <div className={styles.github}>
           <FaGithub />
         </div>
       </div>
-    </div>
+    </>
   );
 }
