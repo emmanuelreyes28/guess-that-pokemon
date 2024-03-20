@@ -10,9 +10,7 @@ import { motion } from "framer-motion";
 
 //TO-DO: create modal for end of game showing player final score and play again button
 // style game page and modal
-// add fade in transition for pokemon options when they mount
 // add styling to response text
-// add height to pokemonOptions to avoid footer from moving up and down on re-render
 
 export type PokemonDetails = {
   name: string;
