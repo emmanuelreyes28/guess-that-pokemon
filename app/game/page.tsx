@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PokemonCard from "../PokemonCard";
 import PokemonChoice from "../PokemonChoice";
+import Modal from "../Modal";
 import styles from "../styles/game.module.css";
 import { FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 //TO-DO: create modal for end of game showing player final score and play again button
 // style game page and modal
-// add styling to response text
 
 export type PokemonDetails = {
   name: string;
@@ -47,6 +47,7 @@ export default function Game() {
   const [isPokemonChosen, setIsPokemonChosen] = useState<boolean>(false);
   const [roundsPlayed, setRoundsPlayed] = useState<number>(0);
   const [gameInProgress, setGameInProgress] = useState<boolean>(true);
+  const [gameOver, setGameOver] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const playerName = searchParams.get("name");
   const rounds = Number(searchParams.get("rounds"));
@@ -122,6 +123,7 @@ export default function Game() {
   function isGameOver() {
     if (roundsPlayed >= rounds) {
       console.log("End of game!");
+      setGameOver(true);
     } else {
       setTimeout(() => {
         setPokemonDetails([]); // reset array of pokemonDetails to avoid from growing on every render
@@ -176,6 +178,11 @@ export default function Game() {
             />
           </motion.div>
         ))}
+      </div>
+      <div className={styles.modal}>
+        {gameOver && (
+          <Modal player={playerName} score={score} rounds={rounds} />
+        )}
       </div>
       <div className={styles.footer}>
         <p>Emmanuel Reyes &copy;</p>
