@@ -94,8 +94,7 @@
 }
 
 .modal {
-    display: flex;
-    width: 100vh;
+    width: 50vw;
     height: 50vh;
     background-color: var(--accent-color);
     position: absolute;
@@ -104,4 +103,13 @@
     left: 25%;
     text-align: center;
     border-radius: 20px;
+}
+
+.modal p{
+    text-align: center;
+    padding-top: 1em;
+    color: white;
+    font-size: 2rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }

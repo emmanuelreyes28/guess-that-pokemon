@@ -179,11 +179,13 @@ export default function Game() {
           </motion.div>
         ))}
       </div>
-      <div className={styles.modal}>
-        {gameOver && (
+
+      {gameOver && (
+        <div className={styles.modal}>
           <Modal player={playerName} score={score} rounds={rounds} />
-        )}
-      </div>
+        </div>
+      )}
+
       <div className={styles.footer}>
         <p>Emmanuel Reyes &copy;</p>
         <div className={styles.github}>
