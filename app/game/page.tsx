@@ -9,9 +9,6 @@ import styles from "../styles/game.module.css";
 import { FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 
-//TO-DO: create modal for end of game showing player final score and play again button
-// style game page and modal
-
 export type PokemonDetails = {
   name: string;
   sprite: string;
@@ -122,8 +119,9 @@ export default function Game() {
 
   function isGameOver() {
     if (roundsPlayed >= rounds) {
-      console.log("End of game!");
-      setGameOver(true);
+      setTimeout(() => {
+        setGameOver(true);
+      }, 1200);
     } else {
       setTimeout(() => {
         setPokemonDetails([]); // reset array of pokemonDetails to avoid from growing on every render
@@ -135,6 +133,11 @@ export default function Game() {
   }
 
   const optionContainer = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 1 } },
+  };
+
+  const modalContainer = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { duration: 1 } },
   };
@@ -181,9 +184,14 @@ export default function Game() {
       </div>
 
       {gameOver && (
-        <div className={styles.modal}>
+        <motion.div
+          className={styles.modal}
+          variants={modalContainer}
+          initial="hidden"
+          animate={"show"}
+        >
           <Modal player={playerName} score={score} rounds={rounds} />
-        </div>
+        </motion.div>
       )}
 
       <div className={styles.footer}>

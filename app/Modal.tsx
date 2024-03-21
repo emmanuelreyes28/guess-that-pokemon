@@ -8,7 +8,7 @@ export default function Modal({
   player,
   score,
   rounds,
-}: Readonly<{ player: string; score: number; rounds: number }>) {
+}: Readonly<{ player: string | null; score: number; rounds: number }>) {
   return (
     <div className={styles.container}>
       <p>
