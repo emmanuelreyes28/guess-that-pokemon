@@ -1,5 +1,3 @@
-// import { PokemonDetails } from "./test/page";
-
 export default function PokemonChoice({
   name,
   onClick,

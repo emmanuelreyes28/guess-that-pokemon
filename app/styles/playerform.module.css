@@ -1,4 +1,4 @@
-.container{
+.container {
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
@@ -17,13 +17,11 @@
     text-align: center;
 }
 
-.button:hover{
+.button:hover {
     scale: 1.10;
-    /* background-color: var(--accent-color);
-    color: var(--text-color); */
 }
 
-.message{
+.message {
     color: var(--text-color);
     font-weight: bold;
 }
@@ -42,13 +40,8 @@
     border-style: none;
     border-radius: 10px;
     border-width: 2px;
-    /* border-color: var(--text-color); */
     padding: 5px 0 5px 5px;
-    /* background: none; */
     background-color: white;
     color: var(--text-color);
 }
 
-.playerNameInput::placeholder{
-    /* color:white; */
-}

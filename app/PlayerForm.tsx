@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -13,13 +14,11 @@ function PlayerForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
-
+  const [message, setMessage] = useState("");
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
     name: "",
     rounds: "5",
   });
-
-  const [message, setMessage] = useState("");
 
   return (
     <form

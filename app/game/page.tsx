@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+
 import PokemonCard from "../PokemonCard";
 import PokemonChoice from "../PokemonChoice";
 import Modal from "../Modal";
+
 import styles from "../styles/game.module.css";
+
 import { FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -35,7 +38,6 @@ const shuffle = (array: PokemonDetails[]) => {
 };
 
 export default function Game() {
-  //create states for target pokemon and pokemon names
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [answer, setAnswer] = useState<PokemonDetails>();
   const [response, setResponse] = useState<string>("");
@@ -48,25 +50,6 @@ export default function Game() {
   const searchParams = useSearchParams();
   const playerName = searchParams.get("name");
   const rounds = Number(searchParams.get("rounds"));
-
-  const fetchPokemonDetails = async () => {
-    const idArray = randomIds();
-    try {
-      const result = await Promise.all(
-        idArray.map(async (id) => {
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${id}`
-          );
-          const data = await response.json();
-          // console.log(data.name);
-          return data;
-        })
-      );
-      return result;
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     let ignore = false;
@@ -102,6 +85,24 @@ export default function Game() {
     const indexAnswer = Math.floor(Math.random() * 4);
     setAnswer(pokemonDetails.at(indexAnswer));
   }, [pokemonDetails]);
+
+  const fetchPokemonDetails = async () => {
+    const idArray = randomIds();
+    try {
+      const result = await Promise.all(
+        idArray.map(async (id) => {
+          const response = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${id}`
+          );
+          const data = await response.json();
+          return data;
+        })
+      );
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   function handleClick(pokemon: { name: string }) {
     setIsPokemonChosen(true); // reveal pokemon once player has made a choice
@@ -167,7 +168,7 @@ export default function Game() {
         </div>
         <div className={styles.response}>{isPokemonChosen && response}</div>
 
-        {pokemonDetails.map((pokemon, index) => (
+        {pokemonDetails.map((pokemon) => (
           <motion.div
             key={pokemon.name}
             className={styles.pokemonOption}
