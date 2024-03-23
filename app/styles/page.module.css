@@ -11,15 +11,10 @@
   color: var(--text-color);
   text-align: center;
   margin-bottom: 50px;
-  /* text-shadow: 5px 5px 5px black; */
 }
 
 .formBackground{
   background-color: var(--primary-color);
   padding: 2em 2em;
   border-radius: 20px;
-}
-
-.playerInput{
-  /* padding-left: 50px; */
 }

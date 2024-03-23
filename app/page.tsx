@@ -1,4 +1,4 @@
-import styles from "./page.module.css";
+import styles from "../app/styles/page.module.css";
 import PlayerForm from "./PlayerForm";
 
 export default function Home() {
